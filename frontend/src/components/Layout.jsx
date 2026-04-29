@@ -1,104 +1,31 @@
 import { useState } from 'react';
-import { Outlet, NavLink, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { AnimatedNavFramer } from './AnimatedNavFramer';
 
 const Layout = () => {
-  const { user, logout, isAdmin, isEmployee } = useAuth();
+  const { isAdmin } = useAuth();
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
-  const handleLogout = () => {
-    setShowLogoutModal(true);
-  };
-
-  const confirmLogout = () => {
-    setShowLogoutModal(false);
-    logout();
-    navigate('/login');
-  };
-
-  const getInitial = (name) => name ? name.charAt(0).toUpperCase() : 'U';
+  // Note: The logout logic is inside AnimatedNavFramer, but we'll keep the modal state if needed
+  // Since AnimatedNavFramer calls logout() directly, the modal won't show.
+  // To use the modal, AnimatedNavFramer would need to emit an event or we can just let it logout directly.
 
   return (
     <div className="app-layout">
-      {/* Sidebar */}
-      <aside className="sidebar">
-        <div className="sidebar-logo">
-          <h2>🛍️ NexaBuy</h2>
-          <span>Ecommerce Platform</span>
-        </div>
-
-        <nav className="sidebar-nav">
-          {!isEmployee() && (
-            <div className="nav-section">
-              <div className="nav-section-title">Main</div>
-              {isAdmin() && (
-                <NavLink to="/dashboard" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-                  <span className="nav-icon">📊</span> Dashboard
-                </NavLink>
-              )}
-              <NavLink to="/products" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-                <span className="nav-icon">📦</span> Products
-              </NavLink>
-              <NavLink to="/cart" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-                <span className="nav-icon">🛒</span> Cart
-              </NavLink>
-              <NavLink to="/wishlist" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-                <span className="nav-icon">❤️</span> Wishlist
-              </NavLink>
-              <NavLink to="/orders" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-                <span className="nav-icon">📋</span> Orders
-              </NavLink>
-            </div>
-          )}
-
-          {isEmployee() && (
-            <div className="nav-section">
-              <div className="nav-section-title">Employee Portal</div>
-              <NavLink to="/employee-dashboard" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-                <span className="nav-icon">📊</span> My Dashboard
-              </NavLink>
-              <NavLink to="/leaves" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-                <span className="nav-icon">📅</span> Leave Requests
-              </NavLink>
-            </div>
-          )}
-
-          {isAdmin() && (
-            <div className="nav-section">
-              <div className="nav-section-title">HR / Admin</div>
-              <NavLink to="/admin/staff" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-                <span className="nav-icon">👥</span> Manage Staff
-              </NavLink>
-              <NavLink to="/leaves" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-                <span className="nav-icon">📅</span> Leave Requests
-              </NavLink>
-              <NavLink to="/categories" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-                <span className="nav-icon">🏷️</span> Categories
-              </NavLink>
-              <NavLink to="/admin/products" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-                <span className="nav-icon">📦</span> Manage Products
-              </NavLink>
-            </div>
-          )}
-        </nav>
-
-        <div className="sidebar-user">
-          <div className="user-avatar">{getInitial(user?.name)}</div>
-          <div className="user-info">
-            <div className="user-name">{user?.name}</div>
-            <div className="user-role">{user?.role}</div>
-          </div>
-          <button className="logout-btn" onClick={handleLogout} title="Logout">⏻</button>
-        </div>
-      </aside>
+      {/* Animated Navigation Menu */}
+      <AnimatedNavFramer />
 
       {/* Page Content */}
       <main className="main-content">
-        <Outlet />
+        <div className="content-container">
+          <Outlet />
+        </div>
       </main>
 
-      {/* Logout Confirmation Modal */}
+      {/* Logout Confirmation Modal (Not currently triggered by new nav, kept for fallback) */}
       {showLogoutModal && (
         <div className="modal-overlay" onClick={() => setShowLogoutModal(false)} role="dialog" aria-modal="true" aria-labelledby="logout-title" style={{ zIndex: 9999 }}>
           <div className="modal" onClick={e => e.stopPropagation()} style={{ maxWidth: '350px', textAlign: 'center', padding: '2rem', borderTop: '4px solid var(--danger)' }}>
@@ -117,7 +44,7 @@ const Layout = () => {
             )}
             <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
               <button className="btn btn-secondary" onClick={() => setShowLogoutModal(false)} style={{ flex: 1, justifyContent: 'center' }}>Cancel</button>
-              <button className="btn btn-danger" onClick={confirmLogout} style={{ flex: 1, justifyContent: 'center' }}>Yes, Log Out</button>
+              <button className="btn btn-danger" onClick={() => { logout(); navigate('/login'); }} style={{ flex: 1, justifyContent: 'center' }}>Yes, Log Out</button>
             </div>
           </div>
         </div>

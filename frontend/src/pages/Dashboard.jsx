@@ -92,107 +92,172 @@ const Dashboard = () => {
   if (loading) return <div className="loading"><div className="spinner"></div>Loading...</div>;
 
   return (
-    <div>
+    <div className="dashboard-container">
       <div className="page-header">
         <div>
-          <h1 className="page-title">Welcome back, {user?.name?.split(' ')[0]}! 👋</h1>
-          <p className="page-subtitle">Here's what's happening in your store today.</p>
+          <h1 className="page-title">Welcome back, {user?.name?.split(' ')[0]}</h1>
+          <p className="page-subtitle">Here's a quick overview of your store's performance today.</p>
         </div>
-        <Link to="/products" className="btn btn-primary">Browse Products →</Link>
+        <Link to="/products" className="btn btn-primary">Browse Products</Link>
       </div>
 
-      {isAdmin() ? (
-        <>
-          {/* Admin Stats Grid */}
-          <div className="stats-grid">
-            <div className="stat-card" style={{ cursor: 'pointer', transition: 'transform 0.2s', border: '1px solid transparent' }} 
-                 onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--primary)'}
-                 onMouseLeave={e => e.currentTarget.style.borderColor = 'transparent'}
-                 onClick={openAttendanceModal} title="Click to view full attendance report">
-              <div className="stat-icon purple">👥</div>
-              <div><div className="stat-value">98%</div><div className="stat-label">Employee Attendance</div></div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-icon pink">📅</div>
-              <div><div className="stat-value">{stats.leaves}</div><div className="stat-label">Pending Leaves</div></div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-icon green">📦</div>
-              <div><div className="stat-value">{stats.products}</div><div className="stat-label">Total Products</div></div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-icon orange">🛒</div>
-              <div><div className="stat-value">{stats.orders}</div><div className="stat-label">Recent Orders</div></div>
-            </div>
-          </div>
+      <div className="dashboard-grid">
+        {isAdmin() ? (
+          <>
+            {/* Quick Stats Blocks */}
+            <div className="stats-grid">
+              <div className="stat-card" onClick={openAttendanceModal} title="Click to view full attendance report" style={{ cursor: 'pointer' }}>
+                <div className="stat-icon purple">👥</div>
+                <div className="stat-info">
+                  <div className="stat-value">98%</div>
+                  <div className="stat-label">Staff Present</div>
+                </div>
+              </div>
+              
+              <div className="stat-card">
+                <div className="stat-icon pink">📅</div>
+                <div className="stat-info">
+                  <div className="stat-value">{stats.leaves}</div>
+                  <div className="stat-label">Pending Leaves</div>
+                </div>
+              </div>
 
-          <div className="card" style={{ marginBottom: '2rem' }}>
-            <div className="page-header" style={{ marginBottom: '1rem' }}>
-              <h2 style={{ fontSize: '1.1rem', fontWeight: '700' }}>Recent Activities</h2>
-            </div>
-            {activities.length === 0 ? (
-               <div style={{ color: 'var(--text-secondary)', padding: '1rem 0' }}>No recent activities.</div>
-            ) : (
-              <ul style={{ listStyleType: 'none', padding: 0, margin: 0 }}>
-                {activities.map((act, index) => (
-                  <li key={act.id} style={{ padding: '0.75rem 0', borderBottom: index < activities.length - 1 ? '1px solid var(--border)' : 'none', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <span title={act.date.toLocaleString()}>{act.icon} <strong>{act.type}:</strong> {act.text} <span style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', marginLeft: '0.5rem' }}>({act.date.toLocaleDateString()})</span></span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </>
-      ) : (
-        <>
-          {/* Customer Stats Grid */}
-          <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', marginBottom: '2rem' }}>
-            <div className="stat-card" style={{ padding: '1.5rem' }}>
-              <div className="stat-icon orange" style={{ width: '48px', height: '48px', fontSize: '1.5rem' }}>🛒</div>
-              <div><div className="stat-value">{stats.cartItems}</div><div className="stat-label">Items in Cart</div></div>
-            </div>
-            <div className="stat-card" style={{ padding: '1.5rem' }}>
-              <div className="stat-icon green" style={{ width: '48px', height: '48px', fontSize: '1.5rem' }}>📋</div>
-              <div><div className="stat-value">{stats.orders}</div><div className="stat-label">Total Orders</div></div>
-            </div>
-          </div>
-        </>
-      )}
+              <div className="stat-card">
+                <div className="stat-icon green">📦</div>
+                <div className="stat-info">
+                  <div className="stat-value">{stats.products}</div>
+                  <div className="stat-label">Total Products</div>
+                </div>
+              </div>
 
-      {/* Recent Orders */}
-      <div className="card">
-        <div className="page-header" style={{ marginBottom: '1rem' }}>
-          <h2 style={{ fontSize: '1.1rem', fontWeight: '700' }}>Recent Orders</h2>
-          <Link to="/orders" className="btn btn-secondary btn-sm">View All</Link>
-        </div>
-        {orders.length === 0 ? (
-          <div className="empty-state">
-            <div className="empty-icon">📋</div>
-            <p>No orders yet. <Link to="/products">Start shopping!</Link></p>
-          </div>
+              <div className="stat-card">
+                <div className="stat-icon orange">🛒</div>
+                <div className="stat-info">
+                  <div className="stat-value">{stats.orders}</div>
+                  <div className="stat-label">Recent Orders</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="dashboard-row">
+              {/* Recent Orders Table */}
+              <div className="card">
+                <div className="page-header" style={{ marginBottom: '1.5rem' }}>
+                  <h2 style={{ fontSize: '1.25rem', fontWeight: '700' }}>Recent Orders</h2>
+                  <Link to="/orders" className="btn btn-secondary btn-sm">View All</Link>
+                </div>
+                {orders.length === 0 ? (
+                  <div className="empty-state">
+                    <div className="empty-icon">📋</div>
+                    <p>No orders yet. <Link to="/products" style={{ color: 'var(--primary-dark)' }}>Start shopping!</Link></p>
+                  </div>
+                ) : (
+                  <div className="table-wrapper">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Order ID</th>
+                          <th>Amount</th>
+                          <th>Status</th>
+                          <th>Date</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {orders.map((order) => (
+                          <tr key={order.order_id}>
+                            <td><strong>#{order.order_id}</strong></td>
+                            <td style={{ fontWeight: '600' }}>₹{parseFloat(order.total_amount).toFixed(2)}</td>
+                            <td>{statusBadge(order.status)}</td>
+                            <td>{new Date(order.created_at).toLocaleDateString('en-IN')}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+
+              {/* Live Activity */}
+              <div className="card">
+                <div className="page-header" style={{ marginBottom: '1.5rem' }}>
+                  <h2 style={{ fontSize: '1.25rem', fontWeight: '700' }}>Live Activity</h2>
+                </div>
+                {activities.length === 0 ? (
+                  <div className="empty-state" style={{ padding: '2rem 1rem' }}>
+                    <p>Quiet right now...</p>
+                  </div>
+                ) : (
+                  <ul className="activity-list">
+                    {activities.map((act) => (
+                      <li key={act.id} className="activity-item">
+                        <div className="activity-icon-wrapper">{act.icon}</div>
+                        <div className="activity-details">
+                          <div className="activity-text"><span className="activity-type">{act.type}:</span> {act.text}</div>
+                          <div className="activity-time">{act.date.toLocaleDateString()}</div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+          </>
         ) : (
-          <div className="table-wrapper">
-            <table>
-              <thead>
-                <tr>
-                  <th>Order ID</th>
-                  <th>Amount</th>
-                  <th>Status</th>
-                  <th>Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {orders.map((order) => (
-                  <tr key={order.order_id}>
-                    <td><strong>#{order.order_id}</strong></td>
-                    <td>₹{parseFloat(order.total_amount).toFixed(2)}</td>
-                    <td>{statusBadge(order.status)}</td>
-                    <td>{new Date(order.created_at).toLocaleDateString('en-IN')}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <>
+            {/* Customer Stats */}
+            <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
+              <div className="stat-card">
+                <div className="stat-icon orange">🛒</div>
+                <div className="stat-info">
+                  <div className="stat-value">{stats.cartItems}</div>
+                  <div className="stat-label">Items in Cart</div>
+                </div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-icon green">📋</div>
+                <div className="stat-info">
+                  <div className="stat-value">{stats.orders}</div>
+                  <div className="stat-label">Total Orders</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="card">
+              <div className="page-header" style={{ marginBottom: '1.5rem' }}>
+                <h2 style={{ fontSize: '1.25rem', fontWeight: '700' }}>Recent Orders</h2>
+                <Link to="/orders" className="btn btn-secondary btn-sm">View All</Link>
+              </div>
+              {orders.length === 0 ? (
+                <div className="empty-state">
+                  <div className="empty-icon">📋</div>
+                  <p>No orders yet. <Link to="/products" style={{ color: 'var(--primary-dark)' }}>Start shopping!</Link></p>
+                </div>
+              ) : (
+                <div className="table-wrapper">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Order ID</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {orders.map((order) => (
+                        <tr key={order.order_id}>
+                          <td><strong>#{order.order_id}</strong></td>
+                          <td style={{ fontWeight: '600' }}>₹{parseFloat(order.total_amount).toFixed(2)}</td>
+                          <td>{statusBadge(order.status)}</td>
+                          <td>{new Date(order.created_at).toLocaleDateString('en-IN')}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </>
         )}
       </div>
 
