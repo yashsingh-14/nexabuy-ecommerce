@@ -112,21 +112,21 @@ input, textarea, select { font-family: inherit; }
   display: flex;
   align-items: center;
   font-weight: 600;
-  padding-left: 1rem;
-  padding-right: 0.5rem;
+  padding-left: 0.75rem;
+  padding-right: 0.25rem;
   color: var(--blue-dark);
 }
 
 .nav-logo-icon {
-  height: 1.5rem;
-  width: 1.5rem;
+  height: 1.25rem;
+  width: 1.25rem;
 }
 
 .nav-links-wrapper {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
-  padding-right: 0.75rem;
+  gap: 0.15rem;
+  padding-right: 0.5rem;
 }
 
 .nav-links-wrapper.pointer-disabled {
@@ -134,11 +134,11 @@ input, textarea, select { font-family: inherit; }
 }
 
 .animated-nav-link {
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--text-secondary);
   transition: var(--transition);
-  padding: 0.35rem 0.75rem;
+  padding: 0.25rem 0.5rem;
   border-radius: 999px;
   white-space: nowrap;
 }
@@ -154,10 +154,10 @@ input, textarea, select { font-family: inherit; }
 }
 
 .nav-divider {
-  height: 18px;
+  height: 16px;
   width: 1px;
   background-color: rgba(0, 0, 0, 0.1);
-  margin: 0 0.25rem;
+  margin: 0 0.15rem;
 }
 
 .nav-user-profile {
