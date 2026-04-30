@@ -1,75 +1,78 @@
-# ShopVibe Configuration & API Documentation
+# 🛍️ NexaBuy E-Commerce Platform
 
-ShopVibe is an enterprise-grade full-stack ecommerce application featuring integrated workforce management, role-based access control, and a scalable relational database architecture.
+Welcome to **NexaBuy**! This is a modern, fast, and easy-to-use e-commerce platform built with React and Node.js. 
 
-## Architecture & Tech Stack
+Unlike traditional e-commerce sites, NexaBuy comes with a built-in **Admin & Employee Dashboard** to help store owners manage their inventory, track staff attendance, and handle leave requests—all in one place!
 
-This repository is structured into a React client and a highly available REST API backend.
+---
 
-- **Frontend:** React.js, Vite
-- **Backend:** Node.js, Express.js
-- **Database:** MySQL
-- **Cloud Hosting:** Render (Frontend/Backend) & Aiven (MySQL)
-- **Authentication:** JSON Web Tokens (JWT)
+## 🚀 Features
 
-## Live Deployment
+### For Customers:
+* **Browse Products:** Clean and elegant product catalog.
+* **Shopping Cart & Wishlist:** Easily add items to buy later or purchase them immediately.
+* **Order Tracking:** Keep track of past and current orders.
 
-This project is fully deployed to the cloud!
-- **Frontend:** [Render Static Site](https://render.com)
-- **Backend API:** [Render Web Service](https://render.com)
-- **Database:** Aiven Free MySQL
+### For Admins & Store Owners:
+* **Dashboard Overview:** See live activity, total orders, and staff attendance at a glance.
+* **Product & Category Management:** Add, edit, or remove products and categories easily.
+* **Staff Management:** View employee attendance and approve/reject leave requests.
 
-To test the live application as an administrator, use:
-- **Email:** `admin@ecommerce.com`
-- **Password:** `admin123`
+### For Employees/Staff:
+* **Employee Dashboard:** Manage daily shifts and attendance.
+* **Leave Requests:** Apply for time off directly through the portal.
 
-## Prerequisites
+---
 
-- Node.js (v16 or higher)
-- npm or yarn package manager
-- MySQL Server (v8.0+)
+## 💻 Tech Stack
 
-## Installation & Setup
+NexaBuy uses a standard and popular tech stack, making it fast and easy to run on any computer.
 
-### 1. Database Initialization
+* **Frontend:** React.js + Vite (for lightning-fast building)
+* **Backend:** Node.js + Express.js
+* **Database:** MySQL
+* **Authentication:** JSON Web Tokens (JWT) for secure logins
 
-1. Connect to your local MySQL instance.
-2. Execute the provided schema file to construct the application models.
-   ```bash
-   mysql -u root -p < backend/database/schema.sql
-   ```
-3. A default administrator account is automatically seeded into the users table.
-   - **Email:** `admin@ecommerce.com`
-   - **Password:** `admin123`
+---
 
-### 2. Backend Environment
+## 🛠️ How to Run NexaBuy Locally
 
-Navigate to the `backend` directory, install necessary dependencies, and supply required configuration parameters.
+Follow these simple steps to run the project on your own computer.
+
+### 1. Database Setup
+Make sure you have MySQL installed on your computer.
+1. Open your MySQL terminal or MySQL Workbench.
+2. Create a new database named `ecommerce_db`.
+3. Import the database tables using the schema file provided:
+   `backend/database/schema.sql`
+
+*(A default admin account is automatically created when you run the schema. Email: `admin@ecommerce.com` | Password: `admin123`)*
+
+### 2. Start the Backend (Server)
+Open your terminal and run these commands:
 
 ```bash
 cd backend
 npm install
 ```
 
-Create a `.env` file in the `backend` root explicitely matching your database configuration. If running the cloud database, use your Aiven credentials:
+Create a new file named `.env` inside the `backend` folder and add your database details:
 ```env
 PORT=5000
-DB_HOST=mysql-xxxx-aivencloud.com
-DB_PORT=25732
-DB_USER=avnadmin
+DB_HOST=localhost
+DB_USER=root
 DB_PASSWORD=your_mysql_password
 DB_NAME=ecommerce_db
-JWT_SECRET=vibgyor_ecommerce_jwt_secret_2026
+JWT_SECRET=my_super_secret_nexabuy_key
 ```
 
-Boot the Node server process:
+Start the server:
 ```bash
 npm run dev
 ```
 
-### 3. Frontend Environment
-
-Navigate to the `frontend` workspace to load the client dependencies.
+### 3. Start the Frontend (Website)
+Open a **new** terminal window and run these commands:
 
 ```bash
 cd frontend
@@ -77,63 +80,21 @@ npm install
 npm run dev
 ```
 
-The localized development client will broadcast to `http://localhost:5173`.
+Your website will now be running live at **http://localhost:5173**!
 
-## Database Schema Overview
+---
 
-The `ecommerce_db` layout ensures entity integrity supporting both retail logistics and workforce coordination.
+## 🔗 Simple API Overview
 
-- `users`: Core identity management providing `admin`, `employee`, and `customer` privilege escalation.
-- `categories` & `products`: Catalog infrastructure containing soft-deletion directives for referential preservation.
-- `cart`, `wishlist` & `orders`: Relational mapping of transactional states and preferences tied to authenticated user IDs.
-- `payment`: Financial history bindings supporting order workflows.
-- `leave_requests` & `attendance`: Human Resource sub-system storing temporal check-in limits and Paid Time Off (PTO) resolutions.
+Here is a quick look at how our backend communicates with the frontend:
 
-## System Features
+* **Authentication:** `/api/auth` (Login and Register users)
+* **Products:** `/api/products` (Fetch, Add, Edit, Delete items)
+* **Categories:** `/api/categories` (Organize items into groups)
+* **Cart & Wishlist:** `/api/cart` and `/api/wishlist` (Manage user shopping bags)
+* **Orders:** `/api/orders` (Process and view orders)
+* **Staff Leaves & Attendance:** `/api/leaves` and `/api/attendance` (Manage the workforce)
 
-- **Role-Based Access Control (RBAC):** Middleware-level security enforcement differentiating administrative tasks, staff controls, and general consumer transactions.
-- **Workforce Management Toolkit:** Staff-facing shift attendance protocols combined with an HR-approval dashboard for administrative delegates.
-- **Inventory Orchestration:** Administrative interfaces dedicated to stock operations involving low-stock signaling and hidden product states.
-- **Order Processing Pipeline:** Standardized asynchronous state flow mapping cart assembly out to finalized delivery tracking.
-- **Stateless Authentication Protocol:** Decoupled server sessions enforced via encrypted JWT payloads stored securely in local browser APIs.
+---
 
-## REST API Reference
-
-### Identity & Authentication
-- `POST /api/auth/register` - Provision a new user account.
-- `POST /api/auth/login` - Authenticate credentials and execute a signed JWT hand-off.
-
-### Catalog Resource Matrix
-- `GET /api/categories` - Query active public categories.
-- `GET /api/categories/all` - Internal retrieval of entire administrative category matrix.
-- `POST /api/categories` - Generate a new category entity.
-- `PUT /api/categories/:id` - Patch parameters of an existing category.
-- `DELETE /api/categories/:id` - Soft-delete category classification.
-- `GET /api/products` - Return formatted products array.
-- `GET /api/products/:id` - Target singular product structure.
-- `POST /api/products` - Supply newly provisioned product.
-- `PUT /api/products/:id` - Patch product specification.
-- `DELETE /api/products/:id` - Soft-delete product record.
-
-### Transaction Core (Cart, Orders, Payment)
-- `GET /api/cart` - Retrieve context-aware cart state.
-- `POST /api/cart` - Bind product payload to cart instance.
-- `PUT /api/cart/:id` - Patch unit counts inside a cart entity.
-- `DELETE /api/cart/:id` - Drop object from active cart.
-- `GET /api/wishlist` - Retrieve active user wishlist.
-- `POST /api/wishlist` - Add a product hash into user wishlist.
-- `DELETE /api/wishlist/:id` - Evict product relationship from user wishlist.
-- `GET /api/orders` - Return current identity's order sequence.
-- `GET /api/orders/all` - Dump entire global order log (Administrative only).
-- `POST /api/orders` - Commit transient cart layout into a firm order entity.
-- `PUT /api/orders/:id/status` - Advance lifecycle state assigned to order ID.
-- `POST /api/payment` - Submit payment confirmation to state machine.
-- `GET /api/payment/order/:id` - Isolate payment metadata tied to a specific order ID.
-
-### Internal Resources (Attendance Tracker & Leave Administration)
-- `GET /api/leaves` - View pending/resolved PTO requests (Context-aware based on role).
-- `POST /api/leaves` - Insert a time-off proposal into DB.
-- `PUT /api/leaves/:id/status` - Administrative mutation of PTO request states flag.
-- `GET /api/attendance/today` - Query logged-in user check-in temporal flag.
-- `POST /api/attendance/toggle` - Fire a temporal check-in or check-out cycle event.
-- `GET /api/attendance/all` - Compile and return full systemic daily staff footprint.
+> **Note:** This project was custom-built with a focus on an elegant UI and a clean, easy-to-read codebase. Enjoy exploring NexaBuy!
