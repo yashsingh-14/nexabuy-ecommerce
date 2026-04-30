@@ -153,7 +153,7 @@ After logging in, you will see the **Products** page. This page displays all ava
 - Category name (e.g., "Electronics", "Clothing")
 - Product name
 - Price (in ₹)
-- Stock availability (In Stock / Out of Stock)
+- Inventory count (In Stock / Out of Stock)
 
 ### 5.2 Searching & Filtering
 
@@ -166,7 +166,7 @@ At the top of the Products page, you will find two filtering tools:
 
 To view more details about any product:
 1. Click the **"Details"** button on the product card.
-2. A dedicated product page will open showing the full product description, price, stock count, and image.
+2. A dedicated product page will open showing the full product description, price, inventory count, and image.
 
 ### 5.4 Adding Items to Cart
 
@@ -325,7 +325,8 @@ Navigate to **"Manage Products"** from the navigation bar.
    - **Category** (required) — Select from the dropdown
    - **Price** (required) — Enter the price in ₹ (e.g., 1299.00)
    - **Description** — Brief product description
-   - **Stock Quantity** — How many units are available (e.g., 50)
+   - **SKU (Stock Keeping Unit)** — Unique identifier for the product
+   - **Inventory Count** — How many units are available (e.g., 50)
    - **Image URL** — Paste a link to the product image
 3. Click **"Add Product"**.
 
@@ -526,7 +527,7 @@ A: Currently, there is no self-service password reset. Please contact the Admin,
 A: This feature is not available in the current version. Please contact the Admin for account changes.
 
 **Q: Why is the "Add to Cart" button greyed out?**  
-A: This means the product is currently out of stock. You can still add it to your Wishlist and purchase it later when the stock is replenished.
+A: This means the product is currently out of stock. You can still add it to your Wishlist and purchase it later when the inventory is replenished.
 
 **Q: How long does it take for my order status to update?**  
 A: Order status is manually updated by the Admin. It depends on the store's processing and shipping timelines.
