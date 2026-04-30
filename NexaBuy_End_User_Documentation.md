@@ -196,7 +196,7 @@ Click **"Cart"** in the navigation bar to view your shopping cart.
 
 **What you will see:**
 - A list of all items in your cart with their image, name, price, and quantity.
-- **Order Summary** on the right side showing subtotal, shipping (Free), and total amount.
+- **Order Summary** on the right side showing subtotal, shipping cost, tax, and total amount.
 
 **Managing Quantities:**
 - Click the **"+"** button to increase the quantity of an item.
@@ -211,7 +211,7 @@ Click **"Cart"** in the navigation bar to view your shopping cart.
 The Checkout page has three main sections plus a coupon option:
 
 **Section 1: Order Summary & Coupons**
-- Shows your subtotal.
+- Shows your subtotal, shipping cost (₹50 flat, free over ₹500), estimated tax (18% GST), and final total.
 - If you have a discount code, enter it in the **"Have a Coupon?"** box and click **"Apply"**.
 - A green message will confirm your discount, and the total to pay will update automatically.
 
@@ -247,7 +247,7 @@ Click **"Orders"** in the navigation bar to view all your past and current order
 | Status | Current status badge (Pending / Confirmed / Shipped / Delivered / Cancelled) |
 | Date | The date when the order was placed |
 
-> **Note:** Order status is updated by the Admin. You cannot change the status yourself.
+> **Note:** Customers and admins can cancel an order if it has not been shipped yet by clicking the "Cancel" button. Other status updates are done by the Admin.
 
 ### 5.9 Requesting a Refund
 
@@ -343,6 +343,7 @@ Navigate to **"Manage Products"** from the navigation bar.
 ### 6.4 Managing Orders
 
 Navigate to **"Orders"** from the navigation bar. As an Admin, you will see **all orders** from all customers (Global Orders Management).
+You can easily filter orders by their current status (All, Pending, Confirmed, Shipped, Delivered, Cancelled) using the filter buttons at the top of the dashboard.
 
 **Updating Order Status:**
 1. In the Status column, click the dropdown next to any order.
@@ -533,7 +534,7 @@ A: This means the product is currently out of stock. You can still add it to you
 A: Order status is manually updated by the Admin. It depends on the store's processing and shipping timelines.
 
 **Q: Can I cancel my order?**  
-A: Only the Admin can change the order status to "Cancelled." Please contact the store for cancellation requests.
+A: Customers and admins can easily cancel an order if it has not been shipped yet. Simply go to the Orders page and click the "✕ Cancel" button next to your pending or confirmed order. This soft deletes the order by changing its status to "Cancelled".
 
 **Q: I am an Employee. Why can't I see Products or Cart?**  
 A: Employee accounts are designed specifically for workforce management (attendance and leave). They do not have access to the shopping features.

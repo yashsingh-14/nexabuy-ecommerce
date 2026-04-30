@@ -57,4 +57,28 @@ router.put('/:id/status', verifyAdmin, async (req, res) => {
   }
 });
 
+// PUT /api/orders/:id/cancel — cancel an order (customer or admin)
+router.put('/:id/cancel', verifyToken, async (req, res) => {
+  try {
+    const [orders] = await db.query('SELECT * FROM orders WHERE order_id = ?', [req.params.id]);
+    if (orders.length === 0) return res.status(404).json({ message: 'Order not found.' });
+
+    const order = orders[0];
+    
+    // Check permission: must be the user who placed the order OR an admin
+    if (order.user_id !== req.user.userId && req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Unauthorized to cancel this order.' });
+    }
+
+    if (!['pending', 'confirmed'].includes(order.status)) {
+      return res.status(400).json({ message: `Cannot cancel an order that is ${order.status}.` });
+    }
+
+    await db.query("UPDATE orders SET status = 'cancelled' WHERE order_id = ?", [req.params.id]);
+    res.json({ message: 'Order cancelled successfully.' });
+  } catch (err) {
+    res.status(500).json({ message: 'Error cancelling order.' });
+  }
+});
+
 module.exports = router;

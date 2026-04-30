@@ -10,6 +10,7 @@ const Orders = () => {
   const [refundReason, setRefundReason] = useState('');
   const [refundLoading, setRefundLoading] = useState(false);
   const [msg, setMsg] = useState('');
+  const [statusFilter, setStatusFilter] = useState('All');
 
   const fetchOrders = () => {
     API.get(isAdmin() ? '/orders/all' : '/orders')
@@ -29,6 +30,18 @@ const Orders = () => {
       setOrders(orders.map(o => o.order_id === orderId ? { ...o, status: newStatus } : o));
     } catch (err) {
       alert('Failed to update status');
+    }
+  };
+
+  const handleCancelOrder = async (orderId) => {
+    if (!window.confirm('Are you sure you want to cancel this order?')) return;
+    try {
+      await API.put(`/orders/${orderId}/cancel`);
+      setOrders(orders.map(o => o.order_id === orderId ? { ...o, status: 'cancelled' } : o));
+      setMsg('Order cancelled successfully.');
+      setTimeout(() => setMsg(''), 4000);
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to cancel order');
     }
   };
 
@@ -62,6 +75,11 @@ const Orders = () => {
 
   if (loading) return <div className="loading"><div className="spinner"></div>Loading...</div>;
 
+  const filteredOrders = orders.filter(o => {
+    if (statusFilter === 'All') return true;
+    return o.status.toLowerCase() === statusFilter.toLowerCase();
+  });
+
   return (
     <div>
       <div className="page-header">
@@ -71,13 +89,27 @@ const Orders = () => {
         </div>
       </div>
 
+      {isAdmin() && (
+        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+          {['All', 'Pending', 'Confirmed', 'Shipped', 'Delivered', 'Cancelled'].map(s => (
+            <button 
+              key={s} 
+              className={`btn btn-sm ${statusFilter === s ? 'btn-primary' : 'btn-secondary'}`}
+              onClick={() => setStatusFilter(s)}
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+      )}
+
       {msg && <div className="alert alert-success">{msg}</div>}
 
       <div className="card">
-        {orders.length === 0 ? (
+        {filteredOrders.length === 0 ? (
           <div className="empty-state">
             <div className="empty-icon">📋</div>
-            <p>{isAdmin() ? 'No orders have been placed on your platform yet.' : 'No orders placed yet. Start shopping!'}</p>
+            <p>{isAdmin() ? `No orders found for status: ${statusFilter}.` : 'No orders placed yet. Start shopping!'}</p>
           </div>
         ) : (
           <div className="table-wrapper">
@@ -93,7 +125,7 @@ const Orders = () => {
                 </tr>
               </thead>
               <tbody>
-                {orders.map((order) => (
+                {filteredOrders.map((order) => (
                   <tr key={order.order_id}>
                     <td><strong>#{order.order_id}</strong></td>
                     {isAdmin() && (
@@ -137,6 +169,15 @@ const Orders = () => {
                     <td>{new Date(order.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
                     {!isAdmin() && (
                       <td>
+                        {['pending', 'confirmed'].includes(order.status) && (
+                          <button
+                            className="btn btn-sm btn-danger"
+                            style={{ padding: '0.2rem 0.6rem', fontSize: '0.8rem', marginRight: '0.5rem' }}
+                            onClick={() => handleCancelOrder(order.order_id)}
+                          >
+                            ✕ Cancel
+                          </button>
+                        )}
                         {['delivered', 'cancelled'].includes(order.status) ? (
                           <button
                             className="btn btn-sm"

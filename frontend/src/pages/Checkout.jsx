@@ -20,7 +20,10 @@ const Checkout = () => {
   const [couponMsg, setCouponMsg] = useState('');
   const [couponLoading, setCouponLoading] = useState(false);
 
-  const finalTotal = couponData ? couponData.final_total : total;
+  const subtotalAfterCoupon = couponData ? couponData.final_total : total;
+  const shipping = total > 500 ? 0 : 50;
+  const tax = total * 0.18;
+  const finalTotal = subtotalAfterCoupon + shipping + tax;
 
   const applyCoupon = async () => {
     if (!couponCode.trim()) return setCouponMsg('Please enter a coupon code.');
@@ -94,6 +97,14 @@ const Checkout = () => {
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>
           <span>Subtotal</span>
           <span>₹{parseFloat(total).toFixed(2)}</span>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>
+          <span>Shipping {total > 500 ? '(Free over ₹500)' : ''}</span>
+          <span>{shipping === 0 ? 'Free' : `₹${shipping.toFixed(2)}`}</span>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>
+          <span>Estimated Tax (18% GST)</span>
+          <span>₹{tax.toFixed(2)}</span>
         </div>
         {couponData && (
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', color: 'var(--success)', fontWeight: '600' }}>
