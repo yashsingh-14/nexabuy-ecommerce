@@ -14,6 +14,36 @@ const Checkout = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Coupon state
+  const [couponCode, setCouponCode] = useState('');
+  const [couponData, setCouponData] = useState(null);
+  const [couponMsg, setCouponMsg] = useState('');
+  const [couponLoading, setCouponLoading] = useState(false);
+
+  const finalTotal = couponData ? couponData.final_total : total;
+
+  const applyCoupon = async () => {
+    if (!couponCode.trim()) return setCouponMsg('Please enter a coupon code.');
+    setCouponLoading(true);
+    setCouponMsg('');
+    try {
+      const { data } = await API.post('/coupons/validate', { code: couponCode, order_total: total });
+      setCouponData(data);
+      setCouponMsg(data.message);
+    } catch (err) {
+      setCouponData(null);
+      setCouponMsg(err.response?.data?.message || 'Invalid coupon.');
+    } finally {
+      setCouponLoading(false);
+    }
+  };
+
+  const removeCoupon = () => {
+    setCouponData(null);
+    setCouponCode('');
+    setCouponMsg('');
+  };
+
   const handleCheckout = async () => {
     if (!addr.name || !addr.phone || !addr.pin || !addr.flat || !addr.area || !addr.city || !addr.state) {
       return setError('Please fill in all address fields.');
@@ -27,14 +57,18 @@ const Checkout = () => {
     setLoading(true);
     setError('');
     try {
-      // Place order
-      const { data: orderData } = await API.post('/orders', { total_amount: total, shipping_address: formattedAddress });
+      // Place order with the final (possibly discounted) total
+      const { data: orderData } = await API.post('/orders', { total_amount: finalTotal, shipping_address: formattedAddress });
       // Record payment
       await API.post('/payment', {
         order_id: orderData.orderId,
-        amount: total,
+        amount: finalTotal,
         method,
       });
+      // Increment coupon usage if applied
+      if (couponData) {
+        await API.post(`/coupons/use/${couponData.coupon_id}`).catch(() => {});
+      }
       navigate('/orders', { replace: true });
     } catch (err) {
       setError(err.response?.data?.message || 'Checkout failed. Please try again.');
@@ -54,12 +88,55 @@ const Checkout = () => {
 
       {error && <div className="alert alert-error">{error}</div>}
 
+      {/* Order Summary */}
       <div className="card" style={{ marginBottom: '1.5rem' }}>
         <h3 style={{ fontWeight: '700', marginBottom: '1rem' }}>Order Summary</h3>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: '700', fontSize: '1.2rem', color: 'var(--primary)' }}>
-          <span>Total to Pay</span>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>
+          <span>Subtotal</span>
           <span>₹{parseFloat(total).toFixed(2)}</span>
         </div>
+        {couponData && (
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', color: 'var(--success)', fontWeight: '600' }}>
+            <span>Coupon Discount ({couponData.code})</span>
+            <span>− ₹{couponData.discount_amount.toFixed(2)}</span>
+          </div>
+        )}
+        <hr style={{ margin: '0.75rem 0', borderColor: 'var(--border)' }} />
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: '700', fontSize: '1.2rem', color: 'var(--primary)' }}>
+          <span>Total to Pay</span>
+          <span>₹{parseFloat(finalTotal).toFixed(2)}</span>
+        </div>
+      </div>
+
+      {/* Coupon Section */}
+      <div className="card" style={{ marginBottom: '1.5rem' }}>
+        <h3 style={{ fontWeight: '700', marginBottom: '1rem' }}>🎟️ Have a Coupon?</h3>
+        {couponData ? (
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem 1rem', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 'var(--radius-sm)' }}>
+              <div>
+                <span style={{ fontWeight: '700', fontFamily: 'monospace', color: 'var(--success)' }}>{couponData.code}</span>
+                <span style={{ marginLeft: '0.5rem', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>— You save ₹{couponData.discount_amount.toFixed(2)}</span>
+              </div>
+              <button onClick={removeCoupon} style={{ background: 'none', border: 'none', color: 'var(--danger)', cursor: 'pointer', fontWeight: '700', fontSize: '1.1rem' }}>✕</button>
+            </div>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Enter coupon code"
+              value={couponCode}
+              onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+              style={{ flex: 1, fontFamily: 'monospace', letterSpacing: '1px', textTransform: 'uppercase' }}
+            />
+            <button className="btn btn-secondary" onClick={applyCoupon} disabled={couponLoading} style={{ whiteSpace: 'nowrap' }}>
+              {couponLoading ? '...' : 'Apply'}
+            </button>
+          </div>
+        )}
+        {couponMsg && !couponData && <p style={{ marginTop: '0.5rem', fontSize: '0.85rem', color: 'var(--danger)' }}>{couponMsg}</p>}
       </div>
 
       <div className="card" style={{ marginBottom: '1.5rem' }}>
@@ -160,9 +237,9 @@ const Checkout = () => {
           className="btn btn-success btn-lg"
           style={{ width: '100%', justifyContent: 'center', marginTop: '1.5rem' }}
           onClick={handleCheckout}
-          disabled={loading || total === 0}
+          disabled={loading || finalTotal === 0}
         >
-          {loading ? 'Processing...' : `✓ Place Order — ₹${parseFloat(total).toFixed(2)}`}
+          {loading ? 'Processing...' : `✓ Place Order — ₹${parseFloat(finalTotal).toFixed(2)}`}
         </button>
       </div>
     </div>

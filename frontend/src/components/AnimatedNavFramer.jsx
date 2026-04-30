@@ -100,6 +100,7 @@ export function AnimatedNavFramer() {
     navItems.push({ name: "Cart", href: "/cart" });
     navItems.push({ name: "Wishlist", href: "/wishlist" });
     navItems.push({ name: "Orders", href: "/orders" });
+    navItems.push({ name: "Refunds", href: "/refunds" });
   }
 
   if (isEmployee()) {
@@ -113,6 +114,7 @@ export function AnimatedNavFramer() {
     navItems.push({ name: "Leaves", href: "/leaves" });
     navItems.push({ name: "Categories", href: "/categories" });
     navItems.push({ name: "Manage Products", href: "/admin/products" });
+    navItems.push({ name: "Coupons", href: "/coupons" });
   }
 
   return (

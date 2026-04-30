@@ -17,6 +17,8 @@ import Checkout from './pages/Checkout';
 import LeaveRequests from './pages/LeaveRequests';
 import EmployeeDashboard from './pages/EmployeeDashboard';
 import ManageEmployees from './pages/ManageEmployees';
+import Coupons from './pages/Coupons';
+import Refunds from './pages/Refunds';
 
 // Protected Route wrapper
 const ProtectedRoute = ({ children, adminOnly = false, employeeOnly = false }) => {
@@ -55,6 +57,8 @@ function AppRoutes() {
         <Route path="orders" element={<Orders />} />
         <Route path="checkout" element={<Checkout />} />
         <Route path="leaves" element={<LeaveRequests />} />
+        <Route path="coupons" element={<ProtectedRoute adminOnly><Coupons /></ProtectedRoute>} />
+        <Route path="refunds" element={<Refunds />} />
       </Route>
     </Routes>
   );

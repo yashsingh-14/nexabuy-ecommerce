@@ -117,6 +117,39 @@ CREATE TABLE IF NOT EXISTS leave_requests (
 );
 
 -- ============================================================
+-- Table: coupons (Discount Codes)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS coupons (
+  coupon_id      INT PRIMARY KEY AUTO_INCREMENT,
+  code           VARCHAR(50) NOT NULL UNIQUE,
+  discount_type  ENUM('percentage', 'flat') NOT NULL,
+  discount_value DECIMAL(10,2) NOT NULL,
+  min_order_amount DECIMAL(10,2) DEFAULT 0,
+  expiry_date    DATE,
+  usage_limit    INT DEFAULT NULL,
+  times_used     INT DEFAULT 0,
+  status         BOOLEAN DEFAULT TRUE,
+  created_at     DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ============================================================
+-- Table: refunds (Return & Refund Requests)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS refunds (
+  refund_id    INT PRIMARY KEY AUTO_INCREMENT,
+  order_id     INT NOT NULL,
+  user_id      INT NOT NULL,
+  reason       VARCHAR(500) NOT NULL,
+  amount       DECIMAL(10,2) NOT NULL,
+  status       ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
+  admin_note   VARCHAR(300),
+  created_at   DATETIME DEFAULT CURRENT_TIMESTAMP,
+  resolved_at  DATETIME,
+  FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+-- ============================================================
 -- Seed: Default admin user
 -- Password: admin123 (bcrypt hash — change after first login)
 -- ============================================================
@@ -130,3 +163,4 @@ INSERT IGNORE INTO categories (category_name, description, status) VALUES
   ('Electronics', 'Electronic gadgets and accessories', true),
   ('Clothing', 'Men and women fashion items', true),
   ('Books', 'Educational and recreational books', true);
+
