@@ -24,8 +24,9 @@
    - 5.4 Adding Items to Cart
    - 5.5 Managing the Wishlist
    - 5.6 Shopping Cart & Quantity Management
-   - 5.7 Checkout & Placing an Order
+   - 5.7 Checkout & Applying Coupons
    - 5.8 Tracking Your Orders
+   - 5.9 Requesting a Refund
 6. [Admin Guide](#6-admin-guide)
    - 6.1 Admin Dashboard Overview
    - 6.2 Managing Categories
@@ -34,6 +35,8 @@
    - 6.5 Managing Staff / Employees
    - 6.6 Leave Request Approvals
    - 6.7 Staff Attendance Report
+   - 6.8 Managing Coupons
+   - 6.9 Processing Refund Requests
 7. [Employee Guide](#7-employee-guide)
    - 7.1 Employee Dashboard
    - 7.2 Clock-In / Clock-Out (Shift Management)
@@ -51,7 +54,7 @@
 In addition to the standard shopping experience, NexaBuy also includes a built-in **Admin Dashboard** for store management and an **Employee Portal** for workforce management—making it an all-in-one platform for running an online store.
 
 ### Key Highlights:
-- **For Customers:** Browse, search, filter, wishlist, cart, checkout, and order tracking.
+- **For Customers:** Browse, search, filter, wishlist, cart, apply discount coupons, checkout, track orders, and request refunds.
 - **For Admins:** Full control over products, categories, orders, staff, attendance, and leave management.
 - **For Employees:** Personal dashboard with shift clock-in/clock-out and leave request system.
 
@@ -203,12 +206,14 @@ Click **"Cart"** in the navigation bar to view your shopping cart.
 **Proceeding to Checkout:**
 - Click the **"Proceed to Checkout →"** button when you are ready to place your order.
 
-### 5.7 Checkout & Placing an Order
+### 5.7 Checkout & Applying Coupons
 
-The Checkout page has three sections:
+The Checkout page has three main sections plus a coupon option:
 
-**Section 1: Order Summary**
-- Shows the total amount you are about to pay.
+**Section 1: Order Summary & Coupons**
+- Shows your subtotal.
+- If you have a discount code, enter it in the **"Have a Coupon?"** box and click **"Apply"**.
+- A green message will confirm your discount, and the total to pay will update automatically.
 
 **Section 2: Delivery Address**
 Fill in all the required fields:
@@ -243,6 +248,16 @@ Click **"Orders"** in the navigation bar to view all your past and current order
 | Date | The date when the order was placed |
 
 > **Note:** Order status is updated by the Admin. You cannot change the status yourself.
+
+### 5.9 Requesting a Refund
+
+If an order is **Delivered** or **Cancelled**, you can request a refund.
+
+1. Go to the **Orders** page.
+2. Find the delivered/cancelled order and click the **"💰 Request Refund"** button.
+3. A form will appear asking for the **Reason for Refund**. Please provide clear details.
+4. Click **"Submit Request"**.
+5. You can track the status of your refund by clicking **"Refunds"** in the top navigation bar. The Admin will review your request.
 
 ---
 
@@ -381,6 +396,29 @@ This modal shows:
 - Their check-out time (if they have clocked out)
 - Overall attendance percentage
 
+### 6.8 Managing Coupons
+
+Navigate to **"Coupons"** from the navigation bar.
+
+**Creating a Coupon:**
+1. Click **"+ Create Coupon"**.
+2. Enter a **Coupon Code** (e.g., `SUMMER20`).
+3. Choose the **Discount Type**: Percentage (e.g., 20%) or Flat Amount (e.g., ₹500).
+4. Optionally set a minimum order amount, expiry date, or maximum usage limit.
+5. Click **"Create Coupon"**.
+
+**Managing Coupons:**
+- You can Edit existing coupons or Deactivate them (soft delete) from the table using the Action buttons.
+
+### 6.9 Processing Refund Requests
+
+Navigate to **"Refunds"** from the navigation bar to see all customer refund requests.
+
+**Approving or Rejecting a Refund:**
+1. Review the request details, including the order amount and the customer's reason.
+2. Click **"✓ Approve"** to accept the refund. This will automatically change the original order status to Cancelled.
+3. Click **"✗ Reject"** to deny the refund. You will be prompted to provide a reason for rejection (optional).
+
 ---
 
 ## 7. Employee Guide
@@ -458,11 +496,13 @@ NexaBuy uses a modern, animated floating navigation bar at the top center of the
 | Cart | Products | Leave Requests |
 | Wishlist | Cart | |
 | Orders | Wishlist | |
-| | Orders | |
+| Refunds | Orders | |
+| | Refunds | |
 | | Staff | |
 | | Leaves | |
 | | Categories | |
 | | Manage Products | |
+| | Coupons | |
 
 Each link has a small avatar icon showing the first letter of your name and a **"Logout"** button at the end.
 
