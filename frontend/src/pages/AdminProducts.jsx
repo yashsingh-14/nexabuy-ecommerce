@@ -6,7 +6,7 @@ const AdminProducts = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modal, setModal] = useState({ open: false, mode: 'create', data: null });
-  const [form, setForm] = useState({ category_id: '', name: '', description: '', price: '', stock: '', image_url: '' });
+  const [form, setForm] = useState({ category_id: '', product_name: '', description: '', price: '', inventory_count: '', SKU: '', image_url: '' });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
@@ -28,7 +28,7 @@ const AdminProducts = () => {
   useEffect(() => { fetchAll(); }, []);
 
   const openCreate = () => {
-    setForm({ category_id: '', name: '', description: '', price: '', stock: '', image_url: '' });
+    setForm({ category_id: '', product_name: '', description: '', price: '', inventory_count: '', SKU: '', image_url: '' });
     setModal({ open: true, mode: 'create', data: null });
     setError('');
   };
@@ -36,10 +36,11 @@ const AdminProducts = () => {
   const openEdit = (product) => {
     setForm({
       category_id: product.category_id || '',
-      name: product.name,
+      product_name: product.product_name,
       description: product.description || '',
       price: product.price,
-      stock: product.stock,
+      inventory_count: product.inventory_count,
+      SKU: product.SKU || '',
       image_url: product.image_url || '',
     });
     setModal({ open: true, mode: 'edit', data: product });
@@ -68,10 +69,10 @@ const AdminProducts = () => {
   };
 
   const handleDelete = async (product) => {
-    if (!window.confirm(`Deactivate "${product.name}"?`)) return;
+    if (!window.confirm(`Deactivate "${product.product_name}"?`)) return;
     try {
       await API.delete(`/products/${product.product_id}`);
-      setSuccess(`"${product.name}" deactivated.`);
+      setSuccess(`"${product.product_name}" deactivated.`);
       fetchAll();
       setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
@@ -106,6 +107,7 @@ const AdminProducts = () => {
               <tr>
                 <th>#</th>
                 <th>Name</th>
+                <th>SKU</th>
                 <th>Category</th>
                 <th>Price</th>
                 <th>Stock</th>
@@ -121,13 +123,14 @@ const AdminProducts = () => {
                   <tr key={p.product_id}>
                     <td>{p.product_id}</td>
                     <td>
-                      <strong>{p.name}</strong>
+                      <strong>{p.product_name}</strong>
                       {p.description && <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '2px' }}>{p.description.slice(0, 50)}{p.description.length > 50 ? '…' : ''}</div>}
                     </td>
+                    <td>{p.SKU || '—'}</td>
                     <td><span className="badge badge-primary">{p.category_name || '—'}</span></td>
                     <td><strong style={{ color: 'var(--primary)' }}>₹{parseFloat(p.price).toFixed(2)}</strong></td>
                     <td>
-                      <span className={`badge ${p.stock > 0 ? 'badge-success' : 'badge-danger'}`}>{p.stock}</span>
+                      <span className={`badge ${p.inventory_count > 0 ? 'badge-success' : 'badge-danger'}`}>{p.inventory_count}</span>
                     </td>
                     <td>
                       {p.status
@@ -166,9 +169,21 @@ const AdminProducts = () => {
                     type="text"
                     className="form-control"
                     placeholder="e.g. Wireless Headphones"
-                    value={form.name}
-                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    value={form.product_name}
+                    onChange={(e) => setForm({ ...form, product_name: e.target.value })}
                     required
+                  />
+                </div>
+
+                <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                  <label className="form-label" htmlFor="prod-sku">SKU (Stock Keeping Unit)</label>
+                  <input
+                    id="prod-sku"
+                    type="text"
+                    className="form-control"
+                    placeholder="e.g. ELEC-001"
+                    value={form.SKU}
+                    onChange={(e) => setForm({ ...form, SKU: e.target.value })}
                   />
                 </div>
 
@@ -217,14 +232,14 @@ const AdminProducts = () => {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label" htmlFor="prod-stock">Stock Quantity</label>
+                  <label className="form-label" htmlFor="prod-stock">Inventory Count</label>
                   <input
                     id="prod-stock"
                     type="number"
                     className="form-control"
                     placeholder="e.g. 50"
-                    value={form.stock}
-                    onChange={(e) => setForm({ ...form, stock: e.target.value })}
+                    value={form.inventory_count}
+                    onChange={(e) => setForm({ ...form, inventory_count: e.target.value })}
                     min="0"
                   />
                 </div>

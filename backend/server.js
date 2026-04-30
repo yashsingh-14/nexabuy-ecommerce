@@ -64,6 +64,14 @@ async function runMigrations() {
       FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE,
       FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
     )`);
+
+    // Products Schema Updates
+    try { await db.execute(`ALTER TABLE products CHANGE name product_name VARCHAR(150) NOT NULL`); } catch (e) {}
+    try { await db.execute(`ALTER TABLE products MODIFY description VARCHAR(500)`); } catch (e) {}
+    try { await db.execute(`ALTER TABLE products CHANGE stock inventory_count INT DEFAULT 0`); } catch (e) {}
+    try { await db.execute(`ALTER TABLE products ADD COLUMN SKU VARCHAR(50)`); } catch (e) {}
+    try { await db.execute(`ALTER TABLE products ADD COLUMN updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP`); } catch (e) {}
+
     console.log('✅ Database tables verified.');
   } catch (err) {
     console.error('⚠️  Migration warning:', err.message);

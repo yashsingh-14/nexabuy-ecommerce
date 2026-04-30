@@ -71,15 +71,15 @@ const Wishlist = () => {
             <div className="product-card" key={item.wishlist_id}>
               <div className="product-image">
                 {item.image_url ? (
-                  <img src={item.image_url} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <img src={item.image_url} alt={item.product_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 ) : '📦'}
               </div>
               <div className="product-info">
-                <div className="product-name">{item.name}</div>
+                <div className="product-name">{item.product_name}</div>
                 <div className="product-price">₹{parseFloat(item.price).toFixed(2)}</div>
                 <div className="product-stock" style={{ marginBottom: '1rem' }}>
-                  {item.stock > 0
-                    ? <span style={{ color: 'var(--success)' }}>✓ In Stock ({item.stock})</span>
+                  {item.inventory_count > 0
+                    ? <span style={{ color: 'var(--success)' }}>✓ In Stock ({item.inventory_count})</span>
                     : <span style={{ color: 'var(--danger)' }}>✗ Out of Stock</span>}
                 </div>
                 
@@ -88,7 +88,7 @@ const Wishlist = () => {
                     className="btn btn-primary btn-sm"
                     style={{ flex: 1, justifyContent: 'center' }}
                     onClick={() => addToCart(item.product_id)}
-                    disabled={item.stock === 0}
+                    disabled={item.inventory_count === 0}
                   >
                     Add to Cart
                   </button>

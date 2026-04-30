@@ -36,15 +36,17 @@ CREATE TABLE IF NOT EXISTS categories (
 -- Table: products
 -- ============================================================
 CREATE TABLE IF NOT EXISTS products (
-  product_id   INT PRIMARY KEY AUTO_INCREMENT,
-  category_id  INT,
-  name         VARCHAR(200) NOT NULL,
-  description  TEXT,
-  price        DECIMAL(10, 2) NOT NULL,
-  stock        INT DEFAULT 0,
-  image_url    VARCHAR(500),
-  created_at   DATETIME DEFAULT CURRENT_TIMESTAMP,
-  status       BOOLEAN DEFAULT TRUE,   -- TRUE = active, FALSE = inactive (soft delete)
+  product_id      INT PRIMARY KEY AUTO_INCREMENT,
+  product_name    VARCHAR(150) NOT NULL,
+  description     VARCHAR(500),
+  price           DECIMAL(10, 2) NOT NULL,
+  SKU             VARCHAR(50),
+  category_id     INT,
+  inventory_count INT DEFAULT 0,
+  image_url       VARCHAR(500),
+  created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  status          BOOLEAN DEFAULT TRUE,
   FOREIGN KEY (category_id) REFERENCES categories(category_id) ON DELETE SET NULL
 );
 

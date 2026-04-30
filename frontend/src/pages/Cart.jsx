@@ -62,10 +62,10 @@ const Cart = () => {
           {items.map((item) => (
             <div className="cart-item" key={item.cart_id}>
               <div className="cart-item-img">
-                {item.image_url ? <img src={item.image_url} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'var(--radius-sm)' }} /> : '📦'}
+                {item.image_url ? <img src={item.image_url} alt={item.product_name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'var(--radius-sm)' }} /> : '📦'}
               </div>
               <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: '600', marginBottom: '0.25rem' }}>{item.name}</div>
+                <div style={{ fontWeight: '600', marginBottom: '0.25rem' }}>{item.product_name}</div>
                 <div style={{ color: 'var(--primary)', fontWeight: '700' }}>₹{parseFloat(item.price).toFixed(2)}</div>
               </div>
               <div className="qty-control">

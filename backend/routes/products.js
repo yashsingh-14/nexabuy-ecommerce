@@ -43,11 +43,11 @@ router.get('/:id', async (req, res) => {
 // POST /api/products (admin)
 router.post('/', verifyAdmin, async (req, res) => {
   try {
-    const { category_id, name, description, price, stock, image_url } = req.body;
-    if (!name || !price) return res.status(400).json({ message: 'Name and price are required.' });
+    const { category_id, product_name, description, price, inventory_count, SKU, image_url } = req.body;
+    if (!product_name || !price) return res.status(400).json({ message: 'Name and price are required.' });
     const [result] = await db.query(
-      'INSERT INTO products (category_id, name, description, price, stock, image_url, created_at, status) VALUES (?, ?, ?, ?, ?, ?, NOW(), true)',
-      [category_id, name, description || '', price, stock || 0, image_url || '']
+      'INSERT INTO products (category_id, product_name, description, price, inventory_count, SKU, image_url, created_at, status) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), true)',
+      [category_id, product_name, description || '', price, inventory_count || 0, SKU || '', image_url || '']
     );
     res.status(201).json({ message: 'Product created.', productId: result.insertId });
   } catch (err) {
@@ -58,10 +58,10 @@ router.post('/', verifyAdmin, async (req, res) => {
 // PUT /api/products/:id (admin)
 router.put('/:id', verifyAdmin, async (req, res) => {
   try {
-    const { category_id, name, description, price, stock, image_url } = req.body;
+    const { category_id, product_name, description, price, inventory_count, SKU, image_url } = req.body;
     await db.query(
-      'UPDATE products SET category_id=?, name=?, description=?, price=?, stock=?, image_url=? WHERE product_id=?',
-      [category_id, name, description, price, stock, image_url, req.params.id]
+      'UPDATE products SET category_id=?, product_name=?, description=?, price=?, inventory_count=?, SKU=?, image_url=? WHERE product_id=?',
+      [category_id, product_name, description, price, inventory_count, SKU, image_url, req.params.id]
     );
     res.json({ message: 'Product updated.' });
   } catch (err) {

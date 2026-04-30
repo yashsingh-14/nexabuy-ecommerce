@@ -53,82 +53,92 @@ async function seed() {
   // ── Step 2: Create Products ──
   const products = [
     {
-      name: 'Wireless Bluetooth Headphones',
+      product_name: 'Wireless Bluetooth Headphones',
       description: 'Premium noise-cancelling over-ear headphones with 30-hour battery life and deep bass.',
       price: 1499.00,
-      stock: 45,
+      inventory_count: 45,
+      SKU: 'ELEC-HEAD-001',
       category_id: categoryIds['Electronics'],
       image_url: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80'
     },
     {
-      name: 'Smart Fitness Watch',
+      product_name: 'Smart Fitness Watch',
       description: 'Water-resistant smartwatch with heart rate monitor, step counter, and sleep tracking.',
       price: 2999.00,
-      stock: 30,
+      inventory_count: 30,
+      SKU: 'ELEC-WTCH-002',
       category_id: categoryIds['Electronics'],
       image_url: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=80'
     },
     {
-      name: 'Portable Bluetooth Speaker',
+      product_name: 'Portable Bluetooth Speaker',
       description: 'Compact waterproof speaker with 360° surround sound and 12-hour playtime.',
       price: 1199.00,
-      stock: 60,
+      inventory_count: 60,
+      SKU: 'ELEC-SPKR-003',
       category_id: categoryIds['Electronics'],
       image_url: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&q=80'
     },
     {
-      name: 'Classic White Cotton T-Shirt',
+      product_name: 'Classic White Cotton T-Shirt',
       description: 'Premium 100% cotton crew neck t-shirt. Soft, breathable, and perfect for everyday wear.',
       price: 599.00,
-      stock: 100,
+      inventory_count: 100,
+      SKU: 'CLOT-TSHRT-004',
       category_id: categoryIds['Clothing'],
       image_url: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&q=80'
     },
     {
-      name: 'Slim Fit Denim Jeans',
+      product_name: 'Slim Fit Denim Jeans',
       description: 'Dark wash stretch denim jeans with modern slim fit. Comfortable all-day wear.',
       price: 1299.00,
-      stock: 75,
+      inventory_count: 75,
+      SKU: 'CLOT-JEAN-005',
       category_id: categoryIds['Clothing'],
       image_url: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&q=80'
     },
     {
-      name: 'Aviator Sunglasses',
+      product_name: 'Aviator Sunglasses',
       description: 'Classic UV400 polarized aviator sunglasses with gold metal frame.',
       price: 899.00,
-      stock: 50,
+      inventory_count: 50,
+      SKU: 'ACCS-SUNG-006',
       category_id: categoryIds['Accessories'],
       image_url: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&q=80'
     },
     {
-      name: 'Leather Crossbody Bag',
+      product_name: 'Leather Crossbody Bag',
       description: 'Genuine leather compact crossbody bag with adjustable strap. Perfect for travel.',
       price: 1799.00,
-      stock: 35,
+      inventory_count: 35,
+      SKU: 'ACCS-BAG-007',
       category_id: categoryIds['Accessories'],
       image_url: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400&q=80'
     },
     {
-      name: 'Stainless Steel Water Bottle',
+      product_name: 'Stainless Steel Water Bottle',
       description: 'Double-wall vacuum insulated 750ml bottle. Keeps drinks cold for 24 hours.',
       price: 499.00,
-      stock: 120,
+      inventory_count: 120,
+      SKU: 'HOME-BOTL-008',
       category_id: categoryIds['Home & Kitchen'],
       image_url: 'https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=400&q=80'
     },
     {
-      name: 'Ceramic Coffee Mug Set',
+      product_name: 'Ceramic Coffee Mug Set',
       description: 'Set of 4 handcrafted ceramic mugs in pastel shades. Microwave and dishwasher safe.',
       price: 799.00,
-      stock: 40,
+      inventory_count: 40,
+      SKU: 'HOME-MUGS-009',
       category_id: categoryIds['Home & Kitchen'],
       image_url: 'https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?w=400&q=80'
     },
     {
-      name: 'Running Sports Shoes',
+      product_name: 'Running Sports Shoes',
       description: 'Lightweight mesh running shoes with cushioned sole. Available in multiple sizes.',
       price: 1999.00,
-      stock: 55,
+      inventory_count: 55,
+      SKU: 'CLOT-SHOE-010',
       category_id: categoryIds['Clothing'],
       image_url: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80'
     },
@@ -141,12 +151,12 @@ async function seed() {
       const data = await res.json();
       if (res.ok) {
         successCount++;
-        console.log(`✅ Product added: ${product.name} — ₹${product.price}`);
+        console.log(`✅ Product added: ${product.product_name} — ₹${product.price}`);
       } else {
-        console.log(`⚠️  Failed to add "${product.name}": ${data.message}`);
+        console.log(`⚠️  Failed to add "${product.product_name}": ${data.message}`);
       }
     } catch (err) {
-      console.error(`Error adding ${product.name}:`, err.message);
+      console.error(`Error adding ${product.product_name}:`, err.message);
     }
   }
 
